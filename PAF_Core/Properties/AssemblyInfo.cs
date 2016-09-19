@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("MCPE_Utils_Library")]
+[assembly: AssemblyTitle("PAF_Core")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MCPE_Utils_Library")]
+[assembly: AssemblyProduct("PAF_Core")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // このプロジェクトが COM に公開される場合、次の GUID が typelib の ID になります
-[assembly: Guid("83c1f29e-730d-423b-b967-78569a6c3778")]
+[assembly: Guid("1f97df3a-a74f-427e-8143-3fd774e26da8")]
 
 // アセンブリのバージョン情報は次の 4 つの値で構成されています:
 //
