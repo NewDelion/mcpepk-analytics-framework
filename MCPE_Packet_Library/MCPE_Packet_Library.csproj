@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MCPE_Packet_Library</RootNamespace>
     <AssemblyName>MCPE_Packet_Library</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,7 +41,35 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RAKNET\protocol\DataPacket\RAKNET_CLIENT_CONNECT.cs" />
+    <Compile Include="RAKNET\protocol\DataPacket\RAKNET_CLIENT_DISCONNECT.cs" />
+    <Compile Include="RAKNET\protocol\DataPacket\RAKNET_CLIENT_HANDSHAKE.cs" />
+    <Compile Include="RAKNET\protocol\DataPacket\RAKNET_PING.cs" />
+    <Compile Include="RAKNET\protocol\DataPacket\RAKNET_PONG.cs" />
+    <Compile Include="RAKNET\protocol\DataPacket\RAKNET_SERVER_HANDSHAKE.cs" />
+    <Compile Include="RAKNET\protocol\RAKNET_ACK.cs" />
+    <Compile Include="RAKNET\protocol\RAKNET_NACK.cs" />
+    <Compile Include="RAKNET\protocol\RAKNET_OPEN_REPLY_1.cs" />
+    <Compile Include="RAKNET\protocol\RAKNET_OPEN_REPLY_2.cs" />
+    <Compile Include="RAKNET\protocol\RAKNET_OPEN_REQUEST_1.cs" />
+    <Compile Include="RAKNET\protocol\RAKNET_OPEN_REQUEST_2.cs" />
+    <Compile Include="RAKNET\protocol\RAKNET_UNCONNECTED_PING.cs" />
+    <Compile Include="RAKNET\protocol\RAKNET_UNCONNECTED_PING_OPEN_CONNECTIONS.cs" />
+    <Compile Include="RAKNET\protocol\RAKNET_UNCONNECTED_PONG.cs" />
+    <Compile Include="RAKNET\RAKNET.cs" />
+    <Compile Include="RAKNET\RAKNET_ACKNOWLEDGE_PACKET.cs" />
+    <Compile Include="RAKNET\RAKNET_BASE.cs" />
+    <Compile Include="RAKNET\Binary.cs" />
+    <Compile Include="RAKNET\RAKNET_DATA_PACKET.cs" />
+    <Compile Include="RAKNET\RAKNET_ENCAPSULATED_PACKET.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MCPE_Utils_Library\MCPE_Utils_Library.csproj">
+      <Project>{83c1f29e-730d-423b-b967-78569a6c3778}</Project>
+      <Name>MCPE_Utils_Library</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
