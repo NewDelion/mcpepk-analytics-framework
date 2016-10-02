@@ -219,7 +219,18 @@ namespace PAF_Core
 
         public void Stop()
         {
+            if (!ProxyStarted)
+            {
+                Logger.WriteLineWarn("プロキシは既に停止しています。");
+                return;
+            }
 
+            var ev = new ProxyStopEvent();
+            moduleManager.callEvent(ev);
+            if (ev.isCancelled())
+                return;
+
+            //停止処理
         }
     }
 }
