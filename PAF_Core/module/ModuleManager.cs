@@ -17,10 +17,10 @@ namespace PAF_Core.module
         
         public void LoadModules()
         {
-            if (!Directory.Exists("plugin"))
-                Directory.CreateDirectory("plugin");
+            if (!Directory.Exists("modules"))
+                Directory.CreateDirectory("modules");
 
-            foreach(string filename in Directory.GetFiles("plugin", "*.dll"))
+            foreach(string filename in Directory.GetFiles("modules", "*.dll"))
             {
                 Assembly newAssembly = Assembly.LoadFile(Path.GetFullPath(filename));
                 Type[] types = newAssembly.GetExportedTypes();
