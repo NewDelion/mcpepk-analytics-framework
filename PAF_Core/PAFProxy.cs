@@ -190,8 +190,25 @@ namespace PAF_Core
         {
             if(Address_Server == null)
             {
-                
+                Logger.WriteLineError("サーバのアドレスが設定されていません。");
+                Logger.WriteLineWarn("プロキシを起動できませんでした。");
+                return;
             }
+
+            if(IP_Client == null)
+            {
+                Logger.WriteLineError("クライアントのIPが設定されていません。");
+                Logger.WriteLineWarn("プロキシを起動できませんでした。");
+                return;
+            }
+
+            if (ProxyStarted)
+            {
+                Logger.WriteLineWarn("プロキシは既に起動しています。");
+                return;
+            }
+
+
         }
 
         public void Stop()
