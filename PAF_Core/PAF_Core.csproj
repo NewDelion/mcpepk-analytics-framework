@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandReader.cs" />
     <Compile Include="command\Command.cs" />
     <Compile Include="command\CommandMap.cs" />
     <Compile Include="command\DefaultCommandHandler.cs" />

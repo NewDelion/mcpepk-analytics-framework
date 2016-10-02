@@ -22,7 +22,7 @@ namespace PAF_Core
     public class PAFProxy
     {
         public static PAFProxy instance = null;
-
+        
         public CommandMap command_map = null;
         public ModuleManager moduleManager = null;
         public PacketManager packetManager = null;
