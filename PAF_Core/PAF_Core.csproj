@@ -48,6 +48,7 @@
     <Compile Include="module\ModuleManager.cs" />
     <Compile Include="module_event\Cancellable.cs" />
     <Compile Include="module_event\ModuleEvent.cs" />
+    <Compile Include="module_event\proxy\ProxyEvent.cs" />
     <Compile Include="packet\PacketManager.cs" />
     <Compile Include="PAFProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

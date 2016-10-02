@@ -12,6 +12,7 @@ using PAF_Core.module;
 using PAF_Core.packet;
 using PAF_Core.command;
 using PAF_Core.module_event;
+using PAF_Core.module_event.proxy;
 using MCPE_Packet_Library;
 using MCPE_Packet_Library.RAKNET;
 using MCPE_Packet_Library.RAKNET.protocol;
@@ -208,7 +209,12 @@ namespace PAF_Core
                 return;
             }
 
+            var ev = new ProxyStartEvent();
+            moduleManager.callEvent(ev);
+            if (ev.isCancelled())
+                return;
 
+            //起動処理
         }
 
         public void Stop()
