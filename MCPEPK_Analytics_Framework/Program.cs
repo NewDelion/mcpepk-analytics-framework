@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PAF_Core;
 
 namespace MCPEPK_Analytics_Framework
 {
@@ -10,6 +11,10 @@ namespace MCPEPK_Analytics_Framework
     {
         static void Main(string[] args)
         {
+            PAFProxy proxy = new PAFProxy();
+
+            System.Threading.Thread.Sleep(2000);
+            Console.Clear();
             PrintBanner();
 
             while (true)
@@ -18,15 +23,12 @@ namespace MCPEPK_Analytics_Framework
                 string command_line = Console.ReadLine();
                 if (command_line.Trim() == "")
                     continue;
+
+                proxy.command_map.dispatch(command_line);
+
                 string[] command = command_line.Split(' ');
-                if (command[0] == "exit" || command[0] == "quit")
+                if (command.Length > 0 && command[0] == "exit" || command[0] == "quit")
                     break;
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Unkown command...");
-                    Console.ResetColor();
-                }
             }
             Console.WriteLine();
             Console.WriteLine("Good bye!!");

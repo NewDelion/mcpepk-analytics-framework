@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCPE_Utils_Library", "MCPE_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PAF_Core", "PAF_Core\PAF_Core.csproj", "{1F97DF3A-A74F-427E-8143-3FD774E26DA8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestModule1", "TestModule1\TestModule1.csproj", "{88DE5EB8-1EAD-4AE3-9CA9-6FF2A6F1A7BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{1F97DF3A-A74F-427E-8143-3FD774E26DA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F97DF3A-A74F-427E-8143-3FD774E26DA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F97DF3A-A74F-427E-8143-3FD774E26DA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88DE5EB8-1EAD-4AE3-9CA9-6FF2A6F1A7BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88DE5EB8-1EAD-4AE3-9CA9-6FF2A6F1A7BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88DE5EB8-1EAD-4AE3-9CA9-6FF2A6F1A7BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88DE5EB8-1EAD-4AE3-9CA9-6FF2A6F1A7BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

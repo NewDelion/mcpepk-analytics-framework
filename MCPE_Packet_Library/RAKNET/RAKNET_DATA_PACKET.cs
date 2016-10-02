@@ -6,18 +6,11 @@ using System.Threading.Tasks;
 
 namespace MCPE_Packet_Library.RAKNET
 {
-    public class RAKNET_DATA_PACKET : RAKNET_BASE
+    public abstract class RAKNET_DATA_PACKET : RAKNET_BASE
     {
         public List<object> packets = new List<object>();
 
         public int seqNumber;
-
-        public byte id = 0;
-
-        public override byte getID()
-        {
-            return id;
-        }
 
         public override void encode()
         {
@@ -37,7 +30,7 @@ namespace MCPE_Packet_Library.RAKNET
 
         public override void decode()
         {
-            this.id = this.getByte();
+            base.decode();
             this.seqNumber = this.getLTriad();
 
             while (!this.feof())
