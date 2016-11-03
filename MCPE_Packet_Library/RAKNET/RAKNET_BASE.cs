@@ -156,6 +156,7 @@ namespace MCPE_Packet_Library.RAKNET
                 {
                     this.putByte((byte)((~b) & 0xff));
                 }
+                this.putShort(port);
             }
             else
             {
@@ -170,7 +171,7 @@ namespace MCPE_Packet_Library.RAKNET
 
         protected void putAddress(IPEndPoint address)
         {
-            this.putAddress(address.Address.AddressFamily.ToString(), address.Port);
+            this.putAddress(address.Address.ToString(), address.Port);
         }
 
         public virtual void encode()

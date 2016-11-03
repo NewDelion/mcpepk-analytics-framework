@@ -23,6 +23,9 @@ namespace PAF_Core
     public class PAFProxy
     {
         public static PAFProxy instance = null;
+
+        private UdpClient proxy_to_client = null;
+        private UdpClient proxy_to_server = null;
         
         public CommandMap command_map = null;
         public ModuleManager moduleManager = null;
@@ -84,6 +87,9 @@ namespace PAF_Core
             }
         }
 
+        private int client_port = 19132;
+        private int client_unconnected_port = 19132;
+
         private ReaderWriterLock lock_address_server = new ReaderWriterLock();
         private IPEndPoint address_server = null;
         public IPEndPoint Address_Server
@@ -108,30 +114,59 @@ namespace PAF_Core
             }
         }
 
-        private ReaderWriterLock lock_proxy_port = new ReaderWriterLock();
-        private int proxy_port = 19133;
-        public int ProxyPort
+        private ReaderWriterLock lock_proxy_toclient_port = new ReaderWriterLock();
+        private int proxy_toclient_port = 19132;
+        public int ProxyToClientPort
         {
             get
             {
                 try
                 {
-                    lock_proxy_port.AcquireReaderLock(Timeout.Infinite);
-                    return proxy_port;
+                    lock_proxy_toclient_port.AcquireReaderLock(Timeout.Infinite);
+                    return proxy_toclient_port;
                 }
-                finally { lock_proxy_port.ReleaseReaderLock(); }
+                finally { lock_proxy_toclient_port.ReleaseReaderLock(); }
             }
             set
             {
                 try
                 {
-                    lock_proxy_port.AcquireWriterLock(Timeout.Infinite);
-                    proxy_port = value;
+                    lock_proxy_toclient_port.AcquireWriterLock(Timeout.Infinite);
+                    proxy_toclient_port = value;
                 }
-                finally { lock_proxy_port.ReleaseWriterLock(); }
+                finally { lock_proxy_toclient_port.ReleaseWriterLock(); }
             }
         }
-        
+
+        private ReaderWriterLock lock_proxy_toserver_port = new ReaderWriterLock();
+        private int proxy_toserver_port = 19133;
+        public int ProxyToServerPort
+        {
+            get
+            {
+                try
+                {
+                    lock_proxy_toserver_port.AcquireReaderLock(Timeout.Infinite);
+                    return proxy_toserver_port;
+                }
+                finally { lock_proxy_toserver_port.ReleaseReaderLock(); }
+            }
+            set
+            {
+                try
+                {
+                    lock_proxy_toserver_port.AcquireWriterLock(Timeout.Infinite);
+                    proxy_toserver_port = value;
+                }
+                finally { lock_proxy_toserver_port.ReleaseWriterLock(); }
+            }
+        }
+
+        private int current_seqNumber_gap_to_server = 0;
+        private int current_seqNumber_gap_to_client = 0;
+        private int current_messageIndex_gap_to_server = 0;
+        private int current_messageIndex_gap_to_client = 0;
+
         public PAFProxy()
         {
             this.command_map = new CommandMap();
@@ -214,7 +249,15 @@ namespace PAF_Core
             if (ev.isCancelled())
                 return;
 
-            //起動処理
+            ProxyStarted = true;
+            proxy_to_server = new UdpClient(ProxyToServerPort);
+            proxy_to_server.Client.ReceiveBufferSize = 1024 * 1024 * 8;
+            proxy_to_server.Client.SendBufferSize = 1024 * 1024 * 8;
+            proxy_to_server.BeginReceive(ReceiveFromServerCallback, proxy_to_server);
+            proxy_to_client = new UdpClient(ProxyToClientPort);
+            proxy_to_client.Client.ReceiveBufferSize = 1024 * 1024 * 8;
+            proxy_to_client.Client.SendBufferSize = 1024 * 1024 * 8;
+            proxy_to_client.BeginReceive(ReceiveFromClientCallback, proxy_to_client);
         }
 
         public void Stop()
@@ -230,7 +273,158 @@ namespace PAF_Core
             if (ev.isCancelled())
                 return;
 
-            //停止処理
+            ProxyStarted = false;
+            proxy_to_server.Close();
+            proxy_to_client.Close();
+        }
+
+        private void ReceiveFromClientCallback(IAsyncResult iar)
+        {
+            UdpClient socket = (UdpClient)iar.AsyncState;
+            IPEndPoint remoteEP = null;
+            byte[] recBytes = null;
+            try { recBytes = socket.EndReceive(iar, ref remoteEP); }
+            catch (SocketException ex)
+            {
+                Logger.WriteLineWarn("[Error ReciveFromClient]");
+                Logger.WriteLineError(ex.Message);
+            }
+            catch (ObjectDisposedException ex)
+            {
+                if (ProxyStarted)
+                {
+                    Logger.WriteLineWarn("[Error Socket disposed...]");
+                    Logger.WriteLineError(ex.Message);
+                }
+                return;
+            }
+
+            if (!remoteEP.Address.Equals(IP_Client) || recBytes.Length == 0)
+            {
+                proxy_to_client.BeginReceive(ReceiveFromClientCallback, proxy_to_client);
+                return;
+            }
+
+            var packet = packetManager.CreateInstance_RakNet(recBytes[0]);
+            packet.buffer = recBytes;
+            packet.decode();
+            if (packet is RAKNET_OPEN_REQUEST_2)
+            {
+                (packet as RAKNET_OPEN_REQUEST_2).serverAddress = Address_Server.Address.ToString();
+                (packet as RAKNET_OPEN_REQUEST_2).serverPort = Address_Server.Port;
+                (packet as RAKNET_OPEN_REQUEST_2).encode();
+                recBytes = packet.buffer;
+            }
+            else if (packet is RAKNET_UNCONNECTED_PING)
+            {
+                client_unconnected_port = remoteEP.Port;
+            }
+            if(packet is RAKNET_DATA_PACKET)
+            {
+                bool edited = false;
+                for (int i = 0; i < (packet as RAKNET_DATA_PACKET).packets.Count;i++)
+                {
+                    var pk = (packet as RAKNET_DATA_PACKET).packets[i];
+                    if (pk is RAKNET_ENCAPSULATED_PACKET && !(pk as RAKNET_ENCAPSULATED_PACKET).hasSplit)
+                    {
+                        byte[] enpk_buffer = (pk as RAKNET_ENCAPSULATED_PACKET).buffer;
+                        if (enpk_buffer != null && enpk_buffer.Length > 0 && packetManager.Exists_RakNet_DataPacket(enpk_buffer[0]))
+                        {
+                            var dpk = packetManager.CreateInstance_RakNet_DataPacket(enpk_buffer[0]);
+                            if (dpk is RAKNET_CLIENT_HANDSHAKE)//Splitに入ってたらアウト…
+                            {
+                                dpk.buffer = enpk_buffer;
+                                (dpk as RAKNET_CLIENT_HANDSHAKE).decode();
+                                (dpk as RAKNET_CLIENT_HANDSHAKE).address = Address_Server.Address.ToString();
+                                (dpk as RAKNET_CLIENT_HANDSHAKE).port = Address_Server.Port;
+                                (dpk as RAKNET_CLIENT_HANDSHAKE).encode();
+                                (pk as RAKNET_ENCAPSULATED_PACKET).buffer = dpk.buffer;
+                                edited = true;
+                            }
+                        }
+                    }
+                }
+                if (edited)
+                {
+                    (packet as RAKNET_DATA_PACKET).encode();
+                    recBytes = (packet as RAKNET_DATA_PACKET).buffer;
+                }
+            }
+            var ev = new ProxySendToServerEvent(packet);
+            moduleManager.callEvent(ev);
+            proxy_to_server.Send(recBytes, recBytes.Length, Address_Server);
+
+            if (socket.Client != null)
+                proxy_to_client.BeginReceive(ReceiveFromClientCallback, proxy_to_client);
+        }
+
+        private void ReceiveFromServerCallback(IAsyncResult iar)
+        {
+            UdpClient socket = (UdpClient)iar.AsyncState;
+            IPEndPoint remoteEP = null;
+            byte[] recBytes = null;
+            try { recBytes = socket.EndReceive(iar, ref remoteEP); }
+            catch (SocketException ex)
+            {
+                Logger.WriteLineWarn("[Error ReciveFromServer]");
+                Logger.WriteLineError(ex.Message);
+            }
+            catch (ObjectDisposedException ex)
+            {
+                if (ProxyStarted)
+                {
+                    Logger.WriteLineWarn("[Error Socket disposed...]");
+                    Logger.WriteLineError(ex.Message);
+                }
+                return;
+            }
+
+            if (!remoteEP.Equals(Address_Server))
+            {
+                proxy_to_server.BeginReceive(ReceiveFromServerCallback, proxy_to_server);
+                return;
+            }
+
+            var packet = packetManager.CreateInstance_RakNet(recBytes[0]);
+            packet.buffer = recBytes;
+            packet.decode();
+            if (packet is RAKNET_DATA_PACKET)
+            {
+                bool edited = false;
+                for (int i = 0; i < (packet as RAKNET_DATA_PACKET).packets.Count; i++)
+                {
+                    var pk = (packet as RAKNET_DATA_PACKET).packets[i];
+                    if (pk is RAKNET_ENCAPSULATED_PACKET && !(pk as RAKNET_ENCAPSULATED_PACKET).hasSplit)
+                    {
+                        byte[] enpk_buffer = (pk as RAKNET_ENCAPSULATED_PACKET).buffer;
+                        if (enpk_buffer != null && enpk_buffer.Length > 0 && packetManager.Exists_RakNet_DataPacket(enpk_buffer[0]))
+                        {
+                            var dpk = packetManager.CreateInstance_RakNet_DataPacket(enpk_buffer[0]);
+                            if (dpk is RAKNET_SERVER_HANDSHAKE)//Splitに入ってたらアウト…
+                            {
+                                dpk.buffer = enpk_buffer;
+                                (dpk as RAKNET_SERVER_HANDSHAKE).decode();
+                                (dpk as RAKNET_SERVER_HANDSHAKE).address = IP_Client.ToString();
+                                (dpk as RAKNET_SERVER_HANDSHAKE).port = client_port;
+                                (dpk as RAKNET_SERVER_HANDSHAKE).encode();
+                                (pk as RAKNET_ENCAPSULATED_PACKET).buffer = dpk.buffer;
+                                edited = true;
+                            }
+                        }
+                    }
+                }
+                if (edited)
+                {
+                    (packet as RAKNET_DATA_PACKET).encode();
+                    recBytes = (packet as RAKNET_DATA_PACKET).buffer;
+                }
+            }
+            var ev = new ProxySendToClientEvent(packet);
+            moduleManager.callEvent(ev);
+            proxy_to_client.Send(recBytes, recBytes.Length, new IPEndPoint(IP_Client, packet is RAKNET_UNCONNECTED_PONG ? client_unconnected_port : client_port));
+            
+            if (socket.Client != null)
+                proxy_to_server.BeginReceive(ReceiveFromServerCallback, proxy_to_server);
         }
     }
 }

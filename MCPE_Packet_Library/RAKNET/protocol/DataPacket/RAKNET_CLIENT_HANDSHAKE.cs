@@ -37,7 +37,7 @@ namespace MCPE_Packet_Library.RAKNET.protocol.DataPacket
         {
             base.decode();
             var addr = this.getAddress();
-            this.address = addr.AddressFamily.ToString();
+            this.address = addr.Address.ToString();
             this.port = addr.Port;
             for (int i = 0; i < 10; i++)
                 this.systemAddress[i] = this.getAddress();

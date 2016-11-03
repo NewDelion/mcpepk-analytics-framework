@@ -34,7 +34,44 @@ namespace TestModule1
 
         public void handleModuleEvent(ModuleEvent ev)
         {
-            
+            if(ev is PAF_Core.module_event.proxy.ProxyStartEvent)
+            {
+                Logger.WriteLineInfo("プロキシが起動するようですね");
+            }
+            else if (ev is PAF_Core.module_event.proxy.ProxyStopEvent)
+            {
+                Logger.WriteLineInfo("プロキシが停止したようですね");
+            }
+            else if(ev is PAF_Core.module_event.proxy.ProxySendToServerEvent)
+            {
+                //Logger.WriteLineInfo(string.Format("SendToServer: {0}", (ev as PAF_Core.module_event.proxy.ProxySendToServerEvent).packet.GetType().Name));
+                if((ev as PAF_Core.module_event.proxy.ProxySendToServerEvent).packet is MCPE_Packet_Library.RAKNET.RAKNET_DATA_PACKET)
+                {
+                    foreach(var pk in ((ev as PAF_Core.module_event.proxy.ProxySendToServerEvent).packet as MCPE_Packet_Library.RAKNET.RAKNET_DATA_PACKET).packets.Where(d=>d is MCPE_Packet_Library.RAKNET.RAKNET_ENCAPSULATED_PACKET && !(d as MCPE_Packet_Library.RAKNET.RAKNET_ENCAPSULATED_PACKET).hasSplit).Cast<MCPE_Packet_Library.RAKNET.RAKNET_ENCAPSULATED_PACKET>())
+                    {
+                        if (pk.buffer[0] == 0xfe)
+                            Logger.WriteLineInfo(string.Format("ID(To Server MCPE): 0x{0}", pk.buffer[1].ToString("X2")));
+                        else
+                            Logger.WriteLineInfo(string.Format("ID(To Server): 0x{0}", pk.buffer[0].ToString("X2")));
+                    }
+                    //Logger.WriteLineInfo(string.Format("seqNumber: {0}", ((ev as PAF_Core.module_event.proxy.ProxySendToServerEvent).packet as MCPE_Packet_Library.RAKNET.RAKNET_DATA_PACKET).seqNumber));
+                }
+            }
+            else if(ev is PAF_Core.module_event.proxy.ProxySendToClientEvent)
+            {
+                //Logger.WriteLineInfo(string.Format("SendToClient: {0}", (ev as PAF_Core.module_event.proxy.ProxySendToClientEvent).packet.GetType().Name));
+                if ((ev as PAF_Core.module_event.proxy.ProxySendToClientEvent).packet is MCPE_Packet_Library.RAKNET.RAKNET_DATA_PACKET)
+                {
+                    foreach (var pk in ((ev as PAF_Core.module_event.proxy.ProxySendToClientEvent).packet as MCPE_Packet_Library.RAKNET.RAKNET_DATA_PACKET).packets.Where(d => d is MCPE_Packet_Library.RAKNET.RAKNET_ENCAPSULATED_PACKET && !(d as MCPE_Packet_Library.RAKNET.RAKNET_ENCAPSULATED_PACKET).hasSplit).Cast<MCPE_Packet_Library.RAKNET.RAKNET_ENCAPSULATED_PACKET>())
+                    {
+                        if (pk.buffer[0] == 0xfe)
+                            Logger.WriteLineInfo(string.Format("ID(To Client MCPE): 0x{0}", pk.buffer[1].ToString("X2")));
+                        else
+                            Logger.WriteLineInfo(string.Format("ID(To Client): 0x{0}", pk.buffer[0].ToString("X2")));
+                    }
+                    //Logger.WriteLineInfo(string.Format("seqNumber: {0}", ((ev as PAF_Core.module_event.proxy.ProxySendToClientEvent).packet as MCPE_Packet_Library.RAKNET.RAKNET_DATA_PACKET).seqNumber));
+                }
+            }
         }
 
         public void initModule(ModuleManager manager, PAFProxy proxy)

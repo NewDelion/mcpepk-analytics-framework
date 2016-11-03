@@ -34,7 +34,7 @@ namespace MCPE_Packet_Library.RAKNET.protocol
             base.decode();
             this.offset += 16;//magic
             var address = this.getAddress();
-            this.serverAddress = address.AddressFamily.ToString();
+            this.serverAddress = address.Address.ToString();
             this.serverPort = address.Port;
             this.mtuSize = this.getSignedShort();
             this.clientID = this.getLong();

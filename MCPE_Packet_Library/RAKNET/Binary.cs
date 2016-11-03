@@ -172,7 +172,7 @@ namespace MCPE_Packet_Library.RAKNET
 
         public static int readLTriad(byte[] bytes)
         {
-            return readInt(new byte[] { bytes[0], bytes[1], bytes[2], (byte)0x00 });
+            return readLInt(new byte[] { bytes[0], bytes[1], bytes[2], (byte)0x00 });
         }
 
         public static byte[] writeLTriad(int value)

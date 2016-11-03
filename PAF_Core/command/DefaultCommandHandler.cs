@@ -24,7 +24,7 @@ namespace PAF_Core.command
         {
             if (command.getName().Equals("help"))
                 proxy.command_map.showCommandHelp();
-            else if (command.getName().Equals("target_ip"))
+            else if (command.getName().Equals("target-ip"))
             {
                 if (args.Length == 0)
                 {
@@ -49,7 +49,7 @@ namespace PAF_Core.command
                     }
                 }
             }
-            else if (command.getName().Equals("server_ip"))
+            else if (command.getName().Equals("server-ip"))
             {
                 if (args.Length == 0)
                 {
@@ -64,7 +64,10 @@ namespace PAF_Core.command
                     System.Net.IPAddress ip = null;
                     if (System.Net.IPAddress.TryParse(ip_string, out ip))
                     {
-                        proxy.Address_Server.Address = ip;
+                        if (proxy.Address_Server == null)
+                            proxy.Address_Server = new System.Net.IPEndPoint(ip, 0);
+                        else
+                            proxy.Address_Server.Address = ip;
                         Logger.WriteLine("サーバのIPを設定しました。", ConsoleColor.Green);
                         Logger.WriteLine(string.Format("IP：{0}", proxy.Address_Server.Address.ToString()));
                     }
@@ -74,7 +77,7 @@ namespace PAF_Core.command
                     }
                 }
             }
-            else if (command.getName().Equals("server_port"))
+            else if (command.getName().Equals("server-port"))
             {
                 if (args.Length == 0)
                 {
@@ -89,7 +92,10 @@ namespace PAF_Core.command
                     int port = 19132;
                     if(int.TryParse(port_string, out port))
                     {
-                        proxy.Address_Server.Port = port;
+                        if (proxy.Address_Server == null)
+                            proxy.Address_Server = new System.Net.IPEndPoint(System.Net.IPAddress.Loopback, port);
+                        else
+                            proxy.Address_Server.Port = port;
                         Logger.WriteLine("サーバのポートを設定しました。", ConsoleColor.Green);
                         Logger.WriteLine(string.Format("Port：{0}", proxy.Address_Server.Port));
                     }
@@ -99,19 +105,39 @@ namespace PAF_Core.command
                     }
                 }
             }
-            else if (command.getName().Equals("port"))
+            else if (command.getName().Equals("port-to-client"))
             {
                 if (args.Length == 0)
-                    Logger.WriteLineInfo(string.Format("Port：{0}", proxy.ProxyPort));
+                    Logger.WriteLineInfo(string.Format("Port：{0}", proxy.ProxyToClientPort));
                 else
                 {
                     string port_string = args[0];
                     int port = 19133;
                     if (int.TryParse(port_string, out port))
                     {
-                        proxy.ProxyPort = port;
+                        proxy.ProxyToClientPort = port;
                         Logger.WriteLine("プロキシのポートを設定しました。", ConsoleColor.Green);
-                        Logger.WriteLine(string.Format("Port：{0}", proxy.ProxyPort));
+                        Logger.WriteLine(string.Format("Port：{0}", proxy.ProxyToClientPort));
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            else if (command.getName().Equals("port-to-server"))
+            {
+                if (args.Length == 0)
+                    Logger.WriteLineInfo(string.Format("Port：{0}", proxy.ProxyToServerPort));
+                else
+                {
+                    string port_string = args[0];
+                    int port = 19133;
+                    if (int.TryParse(port_string, out port))
+                    {
+                        proxy.ProxyToServerPort = port;
+                        Logger.WriteLine("プロキシのポートを設定しました。", ConsoleColor.Green);
+                        Logger.WriteLine(string.Format("Port：{0}", proxy.ProxyToServerPort));
                     }
                     else
                     {
@@ -138,10 +164,11 @@ namespace PAF_Core.command
             this.proxy = proxy;
 
             proxy.command_map.register(new Command("help", "ヘルプを表示します", "help"), this);
-            proxy.command_map.register(new Command("target_ip", "クライアントのIPを取得・設定します", "target_ip [IP]"), this);
-            proxy.command_map.register(new Command("server_ip", "サーバのIPを取得・設定します", "server_ip [IP]"), this);
-            proxy.command_map.register(new Command("server_port", "サーバのポートを取得・設定します", "server_port [Port]"), this);
-            proxy.command_map.register(new Command("port", "プロキシのポートを取得・設定します", "port [Port]"), this);
+            proxy.command_map.register(new Command("target-ip", "クライアントのIPを取得・設定します", "target-ip [IP]"), this);
+            proxy.command_map.register(new Command("server-ip", "サーバのIPを取得・設定します", "server-ip [IP]"), this);
+            proxy.command_map.register(new Command("server-port", "サーバのポートを取得・設定します", "server-port [Port]"), this);
+            proxy.command_map.register(new Command("port-to-client", "プロキシのポートを取得・設定します", "port-to-client [Port]"), this);
+            proxy.command_map.register(new Command("port-to-server", "プロキシのポートを取得・設定します", "port-to-server [Port]"), this);
             proxy.command_map.register(new Command("run", "プロキシを起動します", "run"), this);
             proxy.command_map.register(new Command("stop", "プロキシを停止します", "stop"), this);
         }

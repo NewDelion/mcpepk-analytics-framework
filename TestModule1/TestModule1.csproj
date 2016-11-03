@@ -44,6 +44,10 @@
     <Compile Include="TestModule1.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MCPE_Packet_Library\MCPE_Packet_Library.csproj">
+      <Project>{b7ec6e12-1402-4b30-abeb-5d6f8fb532c9}</Project>
+      <Name>MCPE_Packet_Library</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PAF_Core\PAF_Core.csproj">
       <Project>{1f97df3a-a74f-427e-8143-3fd774e26da8}</Project>
       <Name>PAF_Core</Name>
