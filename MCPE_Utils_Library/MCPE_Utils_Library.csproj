@@ -40,14 +40,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="entity\data\Skin.cs" />
     <Compile Include="entity\Entity.cs" />
+    <Compile Include="item\Item.cs" />
     <Compile Include="math\Vector2.cs" />
     <Compile Include="math\Vector3.cs" />
+    <Compile Include="nbt\NBTIO.cs" />
+    <Compile Include="nbt\tag\ByteArrayTag.cs" />
+    <Compile Include="nbt\tag\CompoundTag.cs" />
+    <Compile Include="nbt\tag\DoubleTag.cs" />
+    <Compile Include="nbt\tag\FloatTag.cs" />
+    <Compile Include="nbt\tag\IntArrayTag.cs" />
+    <Compile Include="nbt\tag\ListTag.cs" />
+    <Compile Include="nbt\tag\LongTag.cs" />
+    <Compile Include="nbt\tag\ByteTag.cs" />
+    <Compile Include="nbt\tag\EndTag.cs" />
+    <Compile Include="nbt\tag\IntTag.cs" />
+    <Compile Include="nbt\tag\NumberTag.cs" />
+    <Compile Include="nbt\tag\ShortTag.cs" />
+    <Compile Include="nbt\tag\StringTag.cs" />
+    <Compile Include="nbt\tag\Tag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="entity\data\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

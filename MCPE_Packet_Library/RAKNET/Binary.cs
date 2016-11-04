@@ -314,5 +314,15 @@ namespace MCPE_Packet_Library.RAKNET
                 return stream.ToArray();
             }
         }
+
+        public static Guid readUUID(byte[] bytes)
+        {
+            return new Guid(bytes);
+        }
+
+        public static byte[] writeUUID(Guid uuid)
+        {
+            return uuid.ToByteArray();
+        }
     }
 }

@@ -7,10 +7,8 @@ using MCPE_Packet_Library.RAKNET;
 
 namespace PAF_Core.module_event.proxy
 {
-    public class ProxySendToServerEvent : ModuleEvent
+    public class ProxySendToServerEvent : ProxySendEvent
     {
-        public RAKNET_BASE packet = null;
-
         public ProxySendToServerEvent(RAKNET_BASE packet)
         {
             this.packet = packet;

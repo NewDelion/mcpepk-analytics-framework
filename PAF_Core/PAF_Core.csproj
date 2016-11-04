@@ -49,6 +49,7 @@
     <Compile Include="module_event\Cancellable.cs" />
     <Compile Include="module_event\ModuleEvent.cs" />
     <Compile Include="module_event\proxy\ProxyEvent.cs" />
+    <Compile Include="module_event\proxy\ProxySendEvent.cs" />
     <Compile Include="module_event\proxy\ProxySendToClientEvent.cs" />
     <Compile Include="module_event\proxy\ProxySendToServerEvent.cs" />
     <Compile Include="packet\PacketManager.cs" />
