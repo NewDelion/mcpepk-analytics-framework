@@ -18,9 +18,12 @@ namespace MCPE_Packet_Library.RAKNET
             return (byte)(b ? 0x01 : 0x00);
         }
 
-        public static int readSignedByte(byte b)
+        /// <summary>
+        /// 符号あり
+        /// </summary>
+        public static sbyte readSignedByte(byte b)
         {
-            return b & 0xff;
+            return Convert.ToSByte(b);
         }
 
         public static byte writeByte(byte b)
@@ -28,17 +31,26 @@ namespace MCPE_Packet_Library.RAKNET
             return b;
         }
 
-        public static int readShort(byte[] bytes)
+        /// <summary>
+        /// 符号なし。ビッグエンディアン
+        /// </summary>
+        public static ushort readShort(byte[] bytes)
         {
-            return ((bytes[0] & 0xff) << 8) + (bytes[1] & 0xff);
+            return (ushort)(((bytes[0] & 0xff) << 8) + (bytes[1] & 0xff));//Big endian
         }
 
+        /// <summary>
+        /// 符号あり。ビッグエンディアン
+        /// </summary>
         public static short readSignedShort(byte[] bytes)
         {
-            return (short)readShort(bytes);
+            return Convert.ToInt16(readShort(bytes));
         }
 
-        public static byte[] writeShort(int s)
+        /// <summary>
+        /// ビッグエンディアン
+        /// </summary>
+        public static byte[] writeShort(short s)
         {
             byte[] buffer = new byte[2];
             buffer[0] = (byte)(s >> 8);
@@ -46,17 +58,26 @@ namespace MCPE_Packet_Library.RAKNET
             return buffer;
         }
 
-        public static int readLShort(byte[] bytes)
+        /// <summary>
+        /// 符号なし。リトルエンディアン
+        /// </summary>
+        public static ushort readLShort(byte[] bytes)
         {
-            return ((bytes[1] & 0xff) << 8) + (bytes[0] & 0xff);
+            return (ushort)(((bytes[1] & 0xff) << 8) + (bytes[0] & 0xff));
         }
 
+        /// <summary>
+        /// 符号あり。リトルエンディアン
+        /// </summary>
         public static short readSignedLShort(byte[] bytes)
         {
-            return (short)readLShort(bytes);
+            return Convert.ToInt16(readLShort(bytes));
         }
 
-        public static byte[] writeLShort(int s)
+        /// <summary>
+        /// リトルエンディアン
+        /// </summary>
+        public static byte[] writeLShort(short s)
         {
             byte[] buffer = new byte[2];
             buffer[0] = (byte)s;
@@ -64,6 +85,9 @@ namespace MCPE_Packet_Library.RAKNET
             return buffer;
         }
 
+        /// <summary>
+        /// 符号あり。ビッグエンディアン
+        /// </summary>
         public static int readInt(byte[] bytes)
         {
             return 
@@ -73,6 +97,9 @@ namespace MCPE_Packet_Library.RAKNET
                 (bytes[3] & 0xff);
         }
 
+        /// <summary>
+        /// ビッグエンディアン
+        /// </summary>
         public static byte[] writeInt(int i)
         {
             byte[] buffer = new byte[4];
@@ -83,6 +110,9 @@ namespace MCPE_Packet_Library.RAKNET
             return buffer;
         }
 
+        /// <summary>
+        /// リトルエンディアン
+        /// </summary>
         public static int readLInt(byte[] bytes)
         {
             return
@@ -92,16 +122,22 @@ namespace MCPE_Packet_Library.RAKNET
                 (bytes[0] & 0xff);
         }
 
+        /// <summary>
+        /// リトルエンディアン
+        /// </summary>
         public static byte[] writeLInt(int i)
         {
             byte[] buffer = new byte[4];
-            buffer[3] = (byte)i;
-            buffer[0] = (byte)(i >> 8);
-            buffer[1] = (byte)(i >> 16);
-            buffer[2] = (byte)(i >> 24);
+            buffer[0] = (byte)i;
+            buffer[1] = (byte)(i >> 8);
+            buffer[2] = (byte)(i >> 16);
+            buffer[3] = (byte)(i >> 24);
             return buffer;
         }
 
+        /// <summary>
+        /// ビッグエンディアン
+        /// </summary>
         public static long readLong(byte[] bytes)
         {
             return
@@ -115,6 +151,9 @@ namespace MCPE_Packet_Library.RAKNET
                 ((bytes[7] & 0xff));
         }
 
+        /// <summary>
+        /// ビッグエンディアン
+        /// </summary>
         public static byte[] writeLong(long l)
         {
             byte[] buffer = new byte[8];
@@ -129,6 +168,9 @@ namespace MCPE_Packet_Library.RAKNET
             return buffer;
         }
 
+        /// <summary>
+        /// リトルエンディアン
+        /// </summary>
         public static long readLLong(byte[] bytes)
         {
             return
@@ -142,6 +184,9 @@ namespace MCPE_Packet_Library.RAKNET
                 ((bytes[0] & 0xff));
         }
 
+        /// <summary>
+        /// リトルエンディアン
+        /// </summary>
         public static byte[] writeLLong(long l)
         {
             byte[] buffer = new byte[8];
@@ -156,11 +201,17 @@ namespace MCPE_Packet_Library.RAKNET
             return buffer;
         }
 
+        /// <summary>
+        /// ビッグエンディアン
+        /// </summary>
         public static int readTriad(byte[] bytes)
         {
             return readInt(new byte[] { (byte)0x00, bytes[0], bytes[1], bytes[2] });
         }
 
+        /// <summary>
+        /// ビッグエンディアン
+        /// </summary>
         public static byte[] writeTriad(int value)
         {
             byte[] buffer = new byte[3];
@@ -170,11 +221,17 @@ namespace MCPE_Packet_Library.RAKNET
             return buffer;
         }
 
+        /// <summary>
+        /// リトルエンディアン
+        /// </summary>
         public static int readLTriad(byte[] bytes)
         {
             return readLInt(new byte[] { bytes[0], bytes[1], bytes[2], (byte)0x00 });
         }
 
+        /// <summary>
+        /// リトルエンディアン
+        /// </summary>
         public static byte[] writeLTriad(int value)
         {
             byte[] buffer = new byte[3];
@@ -184,41 +241,73 @@ namespace MCPE_Packet_Library.RAKNET
             return buffer;
         }
 
+        /// <summary>
+        /// ビッグエンディアン
+        /// </summary>
         public static float readFloat(byte[] bytes)
         {
-            return BitConverter.ToSingle(new byte[] { bytes[0], bytes[1], bytes[2], bytes[3] }, 0);
+            if (BitConverter.IsLittleEndian)
+                return BitConverter.ToSingle(new byte[] { bytes[3], bytes[2], bytes[1], bytes[0] }, 0);
+            return BitConverter.ToSingle(bytes, 0);
         }
 
+        /// <summary>
+        /// ビッグエンディアン
+        /// </summary>
         public static byte[] writeFloat(float f)
         {
+            if (BitConverter.IsLittleEndian)
+                return BitConverter.GetBytes(f).Reverse().ToArray();
             return BitConverter.GetBytes(f);
         }
 
+        /// <summary>
+        /// リトルエンディアン
+        /// </summary>
         public static float readLFloat(byte[] bytes)
         {
+            if (BitConverter.IsLittleEndian)
+                return BitConverter.ToSingle(bytes, 0);
             return BitConverter.ToSingle(new byte[] { bytes[3], bytes[2], bytes[1], bytes[0] }, 0);
         }
 
+        /// <summary>
+        /// リトルエンディアン
+        /// </summary>
         public static byte[] writeLFloat(float f)
         {
+            if (BitConverter.IsLittleEndian)
+                return BitConverter.GetBytes(f);
             return BitConverter.GetBytes(f).Reverse().ToArray();
         }
 
+        /// <summary>
+        /// ビッグエンディアン
+        /// </summary>
         public static double readDouble(byte[] bytes)
         {
             return BitConverter.Int64BitsToDouble(readLong(bytes));
         }
 
+        /// <summary>
+        /// ビッグエンディアン
+        /// </summary>
         public static byte[] writeDouble(double d)
         {
             return writeLong(BitConverter.DoubleToInt64Bits(d));
         }
 
+        /// <summary>
+        /// リトルエンディアン
+        /// </summary>
         public static double readLDouble(byte[] bytes)
         {
             return BitConverter.Int64BitsToDouble(readLLong(bytes));
         }
 
+        /// <summary>
+        /// リトルエンディアン
+        /// </summary>
         public static byte[] writeLDouble(double d)
         {
             return writeLLong(BitConverter.DoubleToInt64Bits(d));
