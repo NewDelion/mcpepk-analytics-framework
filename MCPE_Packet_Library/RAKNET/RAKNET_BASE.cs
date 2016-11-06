@@ -49,14 +49,14 @@ namespace MCPE_Packet_Library.RAKNET
             return Binary.readInt(this.get(4));
         }
 
-        protected int getShort()
+        protected ushort getShort()
         {
             return Binary.readShort(this.get(2));
         }
 
         protected short getSignedShort()
         {
-            return (short)this.getShort();
+            return Convert.ToInt16(this.getShort());
         }
 
         protected int getTriad()
@@ -115,14 +115,14 @@ namespace MCPE_Packet_Library.RAKNET
             this.put(Binary.writeInt(v));
         }
 
-        protected void putShort(int v)
+        protected void putShort(ushort v)
         {
-            this.put(Binary.writeShort(v));
+            this.put(Binary.writeShort(Convert.ToInt16(v)));
         }
 
         protected void putSignedShort(short v)
         {
-            this.put(Binary.writeShort(v & 0xffff));
+            this.put(Binary.writeShort(v));
         }
 
         protected void putTriad(int v)
@@ -143,11 +143,11 @@ namespace MCPE_Packet_Library.RAKNET
         protected void putString(string str)
         {
             byte[] b = Encoding.UTF8.GetBytes(str);
-            this.putShort(b.Length);
+            this.putShort(Convert.ToUInt16(b.Length));
             this.put(b);
         }
 
-        protected void putAddress(string addr, int port, byte version)
+        protected void putAddress(string addr, ushort port, byte version)
         {
             this.putByte(version);
             if(version == 0x04)
@@ -164,14 +164,14 @@ namespace MCPE_Packet_Library.RAKNET
             }
         }
 
-        protected void putAddress(string addr, int port)
+        protected void putAddress(string addr, ushort port)
         {
             this.putAddress(addr, port, (byte)0x04);
         }
 
         protected void putAddress(IPEndPoint address)
         {
-            this.putAddress(address.Address.ToString(), address.Port);
+            this.putAddress(address.Address.ToString(), Convert.ToUInt16(address.Port));
         }
 
         public virtual void encode()
