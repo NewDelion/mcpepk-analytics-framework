@@ -56,7 +56,7 @@ namespace MCPE_Packet_Library.RAKNET
 
         protected short getSignedShort()
         {
-            return Convert.ToInt16(this.getShort());
+            return (short)this.getShort();
         }
 
         protected int getTriad()
@@ -117,7 +117,7 @@ namespace MCPE_Packet_Library.RAKNET
 
         protected void putShort(ushort v)
         {
-            this.put(Binary.writeShort(Convert.ToInt16(v)));
+            this.put(Binary.writeShort((short)v));
         }
 
         protected void putSignedShort(short v)
@@ -143,11 +143,11 @@ namespace MCPE_Packet_Library.RAKNET
         protected void putString(string str)
         {
             byte[] b = Encoding.UTF8.GetBytes(str);
-            this.putShort(Convert.ToUInt16(b.Length));
+            this.putSignedShort((short)b.Length);
             this.put(b);
         }
 
-        protected void putAddress(string addr, ushort port, byte version)
+        protected void putAddress(string addr, short port, byte version)
         {
             this.putByte(version);
             if(version == 0x04)
@@ -156,7 +156,7 @@ namespace MCPE_Packet_Library.RAKNET
                 {
                     this.putByte((byte)((~b) & 0xff));
                 }
-                this.putShort(port);
+                this.putSignedShort(port);
             }
             else
             {
@@ -164,14 +164,14 @@ namespace MCPE_Packet_Library.RAKNET
             }
         }
 
-        protected void putAddress(string addr, ushort port)
+        protected void putAddress(string addr, short port)
         {
             this.putAddress(addr, port, (byte)0x04);
         }
 
         protected void putAddress(IPEndPoint address)
         {
-            this.putAddress(address.Address.ToString(), Convert.ToUInt16(address.Port));
+            this.putAddress(address.Address.ToString(), (short)address.Port);
         }
 
         public virtual void encode()

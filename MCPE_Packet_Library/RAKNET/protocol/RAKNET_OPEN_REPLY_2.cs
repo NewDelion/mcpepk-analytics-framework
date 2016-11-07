@@ -25,8 +25,8 @@ namespace MCPE_Packet_Library.RAKNET.protocol
             base.encode();
             this.put(RAKNET.MAGIC);
             this.putLong(this.serverID);
-            this.putAddress(this.clientAddress, this.clientPort);
-            this.putShort(this.mtuSize);
+            this.putAddress(this.clientAddress, (short)this.clientPort);
+            this.putSignedShort(this.mtuSize);
             this.putByte((byte)0x00);
         }
 

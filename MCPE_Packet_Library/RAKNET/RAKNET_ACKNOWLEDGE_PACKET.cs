@@ -68,7 +68,7 @@ namespace MCPE_Packet_Library.RAKNET
                 }
             }
 
-            this.putShort(records);
+            this.putSignedShort(records);
             this.buffer = Binary.appendBytes(this.buffer, payload);
         }
 

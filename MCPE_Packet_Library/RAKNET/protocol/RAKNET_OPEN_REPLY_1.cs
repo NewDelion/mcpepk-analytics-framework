@@ -24,7 +24,7 @@ namespace MCPE_Packet_Library.RAKNET.protocol
             this.put(RAKNET.MAGIC);
             this.putLong(this.serverID);
             this.putByte((byte)0x00);
-            this.putShort(this.mtuSize);
+            this.putSignedShort(this.mtuSize);
         }
 
         public override void decode()

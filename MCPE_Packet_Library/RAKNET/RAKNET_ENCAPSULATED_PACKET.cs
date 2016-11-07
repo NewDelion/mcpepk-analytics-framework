@@ -109,7 +109,7 @@ namespace MCPE_Packet_Library.RAKNET
                 }
                 else
                 {
-                    stream.Write(Binary.writeShort(buffer.Length << 3), 0, 2);
+                    stream.Write(Binary.writeShort((short)(buffer.Length << 3)), 0, 2);
                 }
 
                 if(reliability > 0)
@@ -126,7 +126,7 @@ namespace MCPE_Packet_Library.RAKNET
                 if (hasSplit)
                 {
                     stream.Write(Binary.writeInt((int)splitCount), 0, 4);
-                    stream.Write(Binary.writeShort((int)splitID), 0, 2);
+                    stream.Write(Binary.writeShort((short)splitID), 0, 2);
                     stream.Write(Binary.writeInt((int)splitIndex), 0, 4);
                 }
 

@@ -23,7 +23,7 @@ namespace MCPE_Packet_Library.RAKNET
         /// </summary>
         public static sbyte readSignedByte(byte b)
         {
-            return Convert.ToSByte(b);
+            return (sbyte)b;
         }
 
         public static byte writeByte(byte b)
@@ -44,7 +44,7 @@ namespace MCPE_Packet_Library.RAKNET
         /// </summary>
         public static short readSignedShort(byte[] bytes)
         {
-            return Convert.ToInt16(readShort(bytes));
+            return (short)readShort(bytes);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace MCPE_Packet_Library.RAKNET
         /// </summary>
         public static short readSignedLShort(byte[] bytes)
         {
-            return Convert.ToInt16(readLShort(bytes));
+            return (short)readLShort(bytes);
         }
 
         /// <summary>
