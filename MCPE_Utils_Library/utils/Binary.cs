@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MCPE_Packet_Library.RAKNET
+namespace MCPE_Utils_Library.utils
 {
     public class Binary
     {
@@ -90,7 +90,7 @@ namespace MCPE_Packet_Library.RAKNET
         /// </summary>
         public static int readInt(byte[] bytes)
         {
-            return 
+            return
                 ((bytes[0] & 0xff) << 24) +
                 ((bytes[1] & 0xff) << 16) +
                 ((bytes[2] & 0xff) << 8) +
@@ -362,7 +362,7 @@ namespace MCPE_Packet_Library.RAKNET
         public static byte[][] splitBytes(byte[] bytes, int chunkSize)
         {
             List<byte[]> result = new List<byte[]>();
-            for(int i = 0;i< (int)((bytes.Length + 1) / 2); i++)
+            for (int i = 0; i < (int)((bytes.Length + 1) / 2); i++)
             {
                 if ((i + 1) * chunkSize > bytes.Length)
                     result.Add(bytes.Skip(i * chunkSize).ToArray());

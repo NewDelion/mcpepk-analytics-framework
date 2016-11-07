@@ -75,7 +75,6 @@
     <Compile Include="RAKNET\RAKNET.cs" />
     <Compile Include="RAKNET\RAKNET_ACKNOWLEDGE_PACKET.cs" />
     <Compile Include="RAKNET\RAKNET_BASE.cs" />
-    <Compile Include="RAKNET\Binary.cs" />
     <Compile Include="RAKNET\RAKNET_DATA_PACKET.cs" />
     <Compile Include="RAKNET\RAKNET_ENCAPSULATED_PACKET.cs" />
   </ItemGroup>
